@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, shallowRef, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue';
 import { withBase } from 'vitepress';
 import {
   ArrowLeft,
@@ -302,29 +302,28 @@ watch([fontScale, darkReader], () => {
   applyEpubTheme();
 });
 
+onMounted(() => {
+  document.documentElement.classList.add('reading-page-lock');
+});
+
 onBeforeUnmount(() => {
+  document.documentElement.classList.remove('reading-page-lock');
   destroyEpubReader();
 });
 </script>
 
 <template>
   <main v-if="book" class="reader-shell" :class="{ 'reader-dark': darkReader }">
-    <header class="reader-header">
+    <header class="reader-topbar">
       <a class="back-link" :href="withBase(`/books/${book.slug}/`)">
         <ArrowLeft :size="17" aria-hidden="true" />
         总览
       </a>
-      <div>
-        <p class="eyebrow">{{ book.sourceKindLabel }} Reading Workspace</p>
+      <div class="reader-title">
+        <span>{{ book.sourceKindLabel }}</span>
         <h1>{{ book.title }}</h1>
       </div>
-      <div class="reader-actions" aria-label="阅读设置">
-        <button v-if="book.format === 'epub'" type="button" class="icon-button" title="上一页" @click="previousPage">
-          <ChevronLeft :size="17" aria-hidden="true" />
-        </button>
-        <button v-if="book.format === 'epub'" type="button" class="icon-button" title="下一页" @click="nextPage">
-          <ChevronRight :size="17" aria-hidden="true" />
-        </button>
+      <div class="reader-tools" aria-label="显示设置">
         <button v-if="book.format === 'epub'" type="button" class="icon-button" title="减小字号" @click="adjustFont(-0.05)">
           <Minus :size="17" aria-hidden="true" />
         </button>
@@ -361,6 +360,12 @@ onBeforeUnmount(() => {
         </div>
 
         <div v-if="book.format === 'epub' && book.sourceFile" class="epub-reader-shell">
+          <button type="button" class="page-turn page-turn-prev" title="上一页" @click="previousPage">
+            <ChevronLeft :size="22" aria-hidden="true" />
+          </button>
+          <button type="button" class="page-turn page-turn-next" title="下一页" @click="nextPage">
+            <ChevronRight :size="22" aria-hidden="true" />
+          </button>
           <div v-if="readerError" class="reader-error">
             <FileText :size="18" aria-hidden="true" />
             {{ readerError }}
