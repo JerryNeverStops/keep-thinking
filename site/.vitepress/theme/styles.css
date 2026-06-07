@@ -424,7 +424,7 @@
 }
 
 .source-pane {
-  overflow: auto;
+  overflow: hidden;
 }
 
 .source-page {
@@ -441,6 +441,87 @@
   color: var(--vp-c-text-2);
   font-family: var(--ui-sans);
   font-weight: 800;
+}
+
+.source-reader-toolbar {
+  display: grid;
+  grid-template-columns: auto minmax(220px, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg-soft);
+}
+
+.source-reader-toolbar .source-page-heading {
+  margin: 0;
+}
+
+.chapter-select {
+  min-width: 0;
+  width: 100%;
+  height: 38px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  padding: 0 10px;
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
+  font: 700 0.9rem var(--ui-sans);
+}
+
+.reader-location {
+  color: var(--vp-c-text-2);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.epub-reader-shell,
+.pdf-reader-frame {
+  width: 100%;
+  height: calc(100vh - 270px);
+  min-height: 560px;
+  background: var(--vp-c-bg-soft);
+}
+
+.epub-reader-shell {
+  position: relative;
+}
+
+.epub-reader-frame {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.epub-reader-frame.ready {
+  opacity: 1;
+}
+
+.pdf-reader-frame {
+  display: block;
+  border: 0;
+}
+
+.reader-error {
+  position: absolute;
+  inset: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  color: var(--vp-c-text-2);
+  background: var(--vp-c-bg-soft);
+}
+
+.fallback-source-page {
+  overflow: auto;
+  height: calc(100vh - 270px);
+  min-height: 560px;
 }
 
 .page-marker,
@@ -566,8 +647,15 @@
 .reader-dark .source-page-heading,
 .reader-dark .page-marker,
 .reader-dark .chapter-marker,
-.reader-dark .reader-note blockquote {
+.reader-dark .reader-note blockquote,
+.reader-dark .reader-location {
   color: #b9c5c0;
+}
+
+.reader-dark .source-reader-toolbar,
+.reader-dark .epub-reader-shell,
+.reader-dark .pdf-reader-frame {
+  background: #141817;
 }
 
 .mobile-note-overlay {
@@ -611,6 +699,18 @@
 
   .note-pane {
     display: none;
+  }
+
+  .source-reader-toolbar {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .epub-reader-shell,
+  .pdf-reader-frame,
+  .fallback-source-page {
+    height: calc(100vh - 330px);
+    min-height: 520px;
   }
 
   .source-page {

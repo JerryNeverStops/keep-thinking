@@ -145,6 +145,16 @@ function anchorLabel(annotation, format) {
   return location ? `位置 ${location}` : '原文位置';
 }
 
+function anchorCfi(annotation) {
+  if (!annotation.position) return undefined;
+  try {
+    const position = JSON.parse(annotation.position);
+    return position.value;
+  } catch {
+    return undefined;
+  }
+}
+
 function buildMarkdown(book, notes, highlights) {
   const chunks = [`<!-- Generated from Zotero annotations. Do not edit by hand. -->\n`, `# ${book.title}\n`];
 
@@ -314,16 +324,20 @@ for (const attachment of attachments) {
   const extension = format === 'pdf' ? '.pdf' : '.epub';
   const slug = requestedSlug || toSlug(title, `zotero-${attachment.parentKey || attachment.attachmentKey}`);
   const bookDir = path.join(root, 'books', slug);
+  const publicSourceDir = path.join(root, 'site', 'public', 'sources', slug);
   const sourceFile = `source${extension}`;
   const copiedSourcePath = path.join(bookDir, sourceFile);
+  const publicSourcePath = path.join(publicSourceDir, sourceFile);
   const annotations = annotationRows.filter((row) => row.attachmentItemID === attachment.attachmentItemID);
   const notes = [];
   const standaloneHighlights = [];
 
   mkdirSync(bookDir, { recursive: true });
+  mkdirSync(publicSourceDir, { recursive: true });
 
   if (sourcePath && existsSync(sourcePath)) {
     copyFileSync(sourcePath, copiedSourcePath);
+    copyFileSync(sourcePath, publicSourcePath);
   }
 
   for (const annotation of annotations) {
@@ -332,12 +346,14 @@ for (const attachment of attachments) {
     const tags = hashtagsFromText(annotation.comment);
     const label = anchorLabel(annotation, format);
     const sourceExcerpt = annotation.text || '';
+    const cfi = anchorCfi(annotation);
 
     if (!body) {
       standaloneHighlights.push({
         id: annotation.annotationKey,
         label,
-        sourceExcerpt
+        sourceExcerpt,
+        anchorCfi: cfi
       });
       continue;
     }
@@ -350,7 +366,8 @@ for (const attachment of attachments) {
       body,
       sourceExcerpt,
       tags,
-      anchorLabel: label
+      anchorLabel: label,
+      anchorCfi: cfi
     };
 
     if (type === 'concept') {

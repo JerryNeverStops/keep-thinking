@@ -11,7 +11,8 @@
     "article:new": "node scripts/new-article.mjs"
   },
   "dependencies": {
-    "@lucide/vue": "latest"
+    "@lucide/vue": "latest",
+    "epubjs": "^0.3.93"
   },
   "devDependencies": {
     "typescript": "latest",

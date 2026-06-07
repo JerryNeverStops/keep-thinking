@@ -12,6 +12,7 @@ export interface ReadingNote {
   sourceExcerpt: string;
   tags: string[];
   anchorLabel: string;
+  anchorCfi?: string;
   conceptName?: string;
 }
 
@@ -19,6 +20,7 @@ export interface StandaloneHighlight {
   id: string;
   label: string;
   sourceExcerpt: string;
+  anchorCfi?: string;
 }
 
 export interface BookRecord {
