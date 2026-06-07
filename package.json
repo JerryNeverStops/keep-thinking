@@ -1,0 +1,21 @@
+{
+  "name": "philosophy-reading-annotations",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "docs:dev": "vitepress dev site --host 127.0.0.1",
+    "docs:build": "vitepress build site",
+    "docs:preview": "vitepress preview site --host 127.0.0.1",
+    "export:zotero": "node scripts/export-zotero.mjs",
+    "article:new": "node scripts/new-article.mjs"
+  },
+  "dependencies": {
+    "@lucide/vue": "latest"
+  },
+  "devDependencies": {
+    "typescript": "latest",
+    "vitepress": "latest",
+    "vue": "latest"
+  }
+}

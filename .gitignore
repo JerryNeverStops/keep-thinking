@@ -1,0 +1,8 @@
+node_modules/
+site/.vitepress/cache/
+site/.vitepress/dist/
+.playwright-mcp/
+.DS_Store
+*.local
+dist/
+tmp/
